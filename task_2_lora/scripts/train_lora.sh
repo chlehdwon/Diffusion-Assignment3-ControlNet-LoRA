@@ -1,6 +1,6 @@
 export MODEL_NAME="CompVis/stable-diffusion-v1-4"
-export DATASET_NAME="lambdalabs/naruto-blip-captions"
-export OUTPUT_DIR="./runs/sd-naruto-model-lora"
+export DATASET_NAME="reach-vb/pokemon-blip-captions"
+export OUTPUT_DIR="./runs/pokemon-lora"
 
 accelerate launch --mixed_precision="no" train_lora.py \
   --pretrained_model_name_or_path=$MODEL_NAME \

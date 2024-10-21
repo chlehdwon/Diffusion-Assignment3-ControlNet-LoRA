@@ -1,5 +1,13 @@
 # Task 1
 task_1_controlnet/runs
+# task_1_controlnet/data
+# task_1_controlnet/results
+task_1_controlnet/train.sh
 
 # Task 2
 task_2_lora/runs
+# task_2_lora/sample_data
+task_2_lora/scripts
+
+__pycache__
+*/.ipynb

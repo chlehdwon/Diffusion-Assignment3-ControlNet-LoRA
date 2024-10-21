@@ -59,7 +59,10 @@ def zero_convolution(
     # DO NOT change the code outside this part.
     # Return a zero-convolution layer,
     # with the weight & bias initialized as zeros.
-    module = None
+    module = nn.Conv2d(in_channels, out_channels, kernel_size, stride=stride, padding=padding)
+
+    for p in module.parameters():
+        nn.init.constant_(p, 0)
     ######## TODO (1) ########
 
     return module
@@ -459,7 +462,11 @@ class ControlNetModel(ModelMixin, ConfigMixin, FromOriginalModelMixin):
         # DO NOT change the code outside this part.
         # Initialize 'controlnet' using the pretrained 'unet' model
         # NOTE: Modules to initialize: 'conv_in', 'time_proj', 'time_embedding', 'down_blocks', 'mid_block'
-
+        controlnet.conv_in.load_state_dict(unet.conv_in.state_dict())
+        controlnet.time_proj.load_state_dict(unet.time_proj.state_dict())
+        controlnet.time_embedding.load_state_dict(unet.time_embedding.state_dict())
+        controlnet.down_blocks.load_state_dict(unet.down_blocks.state_dict())
+        controlnet.mid_block.load_state_dict(unet.mid_block.state_dict())
         ######## TODO (2) ########
 
         return controlnet
@@ -744,10 +751,9 @@ class ControlNetModel(ModelMixin, ConfigMixin, FromOriginalModelMixin):
         # DO NOT change the code outside this part.
         # Apply zero-convolution to the residual features of each ControlNet block.
         # NOTE: Each 'controlnet_block' is used here.
-
-        down_block_res_samples = None
-        mid_block_res_sample = None
-
+        for d_sample, layer in zip(down_block_res_samples, self.controlnet_down_blocks):
+            d_sample = layer(d_sample)
+        mid_block_res_sample = self.controlnet_mid_block(sample)
         ######## TODO (3) ########
 
         # 6. scaling
